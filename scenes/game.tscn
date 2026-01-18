@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://b5pbspwp3f6sl"]
+[gd_scene load_steps=18 format=4 uid="uid://b5pbspwp3f6sl"]
 
 [ext_resource type="PackedScene" uid="uid://8p1yvuc4go0h" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://b3qlb0qdms2sq" path="res://assets/sprites/world_tileset.png" id="2_yqjtg"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dqa01xdajdmpt" path="res://scenes/platform.tscn" id="5_iywne"]
 [ext_resource type="PackedScene" uid="uid://60srmp8f1guv" path="res://scenes/slime.tscn" id="6_gee14"]
 [ext_resource type="PackedScene" uid="uid://cs04855ow3t40" path="res://scenes/coin.tscn" id="6_p57ef"]
+[ext_resource type="PackedScene" uid="uid://b8h3k2m4n5p6q" path="res://scenes/hud.tscn" id="7_hud"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gee14"]
 distance = -91.0
@@ -354,6 +355,8 @@ position = Vector2(-12, -16)
 zoom = Vector2(3, 3)
 limit_bottom = 70
 position_smoothing_enabled = true
+
+[node name="HUD" parent="." instance=ExtResource("7_hud")]
 
 [node name="Level1" type="Node" parent="."]
 
