@@ -1,19 +1,11 @@
-[gd_scene load_steps=20 format=4 uid="uid://b5pbspwp3f6sl"]
+[gd_scene load_steps=17 format=4 uid="uid://b5pbspwp3f6sl"]
 
 [ext_resource type="PackedScene" uid="uid://8p1yvuc4go0h" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://b3qlb0qdms2sq" path="res://assets/sprites/world_tileset.png" id="2_yqjtg"]
-[ext_resource type="FontFile" uid="uid://bf5i3dm5mpjky" path="res://assets/fonts/PixelOperator8.ttf" id="3_lnu2h"]
-[ext_resource type="Script" uid="uid://dwckxihk3ckq3" path="res://scripts/debug.gd" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://btvetxn3a0nfn" path="res://scenes/killzone.tscn" id="4_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://dqa01xdajdmpt" path="res://scenes/platform.tscn" id="5_iywne"]
 [ext_resource type="PackedScene" uid="uid://60srmp8f1guv" path="res://scenes/slime.tscn" id="6_gee14"]
 [ext_resource type="PackedScene" uid="uid://cs04855ow3t40" path="res://scenes/coin.tscn" id="6_p57ef"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_yqjtg"]
-line_spacing = 0.0
-font = ExtResource("3_lnu2h")
-font_size = 8
-shadow_size = 0
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gee14"]
 distance = -91.0
@@ -357,15 +349,6 @@ _data = {
 unique_name_in_owner = true
 z_index = 1000
 position = Vector2(-12, -16)
-
-[node name="Debug" type="Label" parent="Player"]
-offset_left = -144.0
-offset_top = -79.0
-offset_right = -84.0
-offset_bottom = -56.0
-text = "Current"
-label_settings = SubResource("LabelSettings_yqjtg")
-script = ExtResource("4_lbhrr")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(3, 3)
