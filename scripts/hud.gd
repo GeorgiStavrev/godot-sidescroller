@@ -3,14 +3,17 @@ extends CanvasLayer
 @onready var coin_label: Label = $HUDContainer/CoinLabel
 @onready var coin_icon: TextureRect = $HUDContainer/CoinIcon
 
+
 func _ready() -> void:
 	# Connect to game manager signals
 	GameManager.coins_changed.connect(_on_coins_changed)
 	# Update initial display
 	_update_coin_display()
 
+
 func _on_coins_changed(new_total: int) -> void:
 	_update_coin_display()
+
 
 func _update_coin_display() -> void:
 	if coin_label:
