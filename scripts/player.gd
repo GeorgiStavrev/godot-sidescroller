@@ -3,6 +3,7 @@ extends CharacterBody2D
 const MAX_SPEED = 130.0
 const RUN_SPEED = 200.0  # Speed when holding Ctrl (run button)
 const JUMP_VELOCITY = -300.0
+const JUMP_VELOCITY_RUNNING = -360.0  # Higher jump when running fast (like Mario)
 const GROUND_ACCELERATION = 800.0  # How fast Player accelerates on ground
 const GROUND_FRICTION = 1000.0  # How fast Player decelerates on ground
 const GROUND_FRICTION_FAST = 200.0  # Less friction when moving fast (more inertia)
@@ -16,13 +17,12 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+	var is_running: bool = Input.is_action_pressed("sprint")
 
-	var is_running: bool = false
-	if Input.is_action_pressed("turbo"):
-		is_running = true
+	# Handle jump with inertia - jump higher when running fast (like Mario)
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		var has_momentum: bool = is_running and abs(velocity.x) > INERTIA_THRESHOLD
+		velocity.y = JUMP_VELOCITY_RUNNING if has_momentum else JUMP_VELOCITY
 
 	# Determine current max speed based on run button
 	var current_max_speed := RUN_SPEED if is_running else MAX_SPEED
