@@ -21,5 +21,6 @@ func _on_body_entered(body: Node2D) -> void:
 
 func _on_timer_timeout() -> void:
 	Engine.time_scale = 1.0
+	GameManager.lose_live()
 	GameManager.reset()
 	get_tree().reload_current_scene()

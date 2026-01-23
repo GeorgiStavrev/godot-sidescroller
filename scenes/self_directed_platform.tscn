@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqdlgd46e1q1s"]
+
+[ext_resource type="Script" uid="uid://0q11eaudvqdp" path="res://scripts/self_directed_platform.gd" id="1_4w008"]
+[ext_resource type="Texture2D" uid="uid://cgjbne3w6vcik" path="res://assets/sprites/platforms.png" id="1_norxp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_norxp"]
+size = Vector2(32, 8)
+
+[node name="SelfDirectedPlatform" type="AnimatableBody2D"]
+script = ExtResource("1_4w008")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_norxp")
+region_enabled = true
+region_rect = Rect2(16.05494, 47.854504, 31.806232, 9.169533)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_norxp")
+one_way_collision = true
+
+[node name="RaycastRight" type="RayCast2D" parent="."]
+target_position = Vector2(17, 0)
+
+[node name="RaycastLeft" type="RayCast2D" parent="."]
+target_position = Vector2(-17, 0)
