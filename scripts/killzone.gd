@@ -14,9 +14,12 @@ func _is_player_node(body: Node2D) -> bool:
 func _on_body_entered(body: Node2D) -> void:
 	if _is_player_node(body):
 		print("YOU DIED!")
+		Engine.time_scale = 0.5
+		body.get_node("CollisionShape2D").queue_free()
 		timer.start()
 
 
 func _on_timer_timeout() -> void:
+	Engine.time_scale = 1.0
 	GameManager.reset()
 	get_tree().reload_current_scene()

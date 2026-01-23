@@ -1,4 +1,5 @@
 extends CharacterBody2D
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 const MAX_SPEED = 130.0
 const RUN_SPEED = 200.0  # Speed when holding Ctrl (run button)
@@ -29,8 +30,10 @@ func _physics_process(delta: float) -> void:
 
 	var direction := 0.0
 	if Input.is_action_pressed("run_left"):
+		animated_sprite.flip_h = true
 		direction -= 1.0
 	if Input.is_action_pressed("run_right"):
+		animated_sprite.flip_h = false
 		direction += 1.0
 	if is_on_floor():
 		# Ground movement with acceleration and friction
