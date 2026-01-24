@@ -19,12 +19,14 @@ var lives: int = 3:
 func _ready() -> void:
 	reset()
 
+
 func set_lives(_lives: int) -> void:
 	self.lives = _lives
 
+
 func lose_live() -> void:
 	self.lives -= 1
-	print('lives left ', self.lives)
+
 
 func collect_coin() -> void:
 	coins += 1
