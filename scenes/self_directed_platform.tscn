@@ -9,10 +9,10 @@ size = Vector2(32, 8)
 [node name="SelfDirectedPlatform" type="AnimatableBody2D"]
 script = ExtResource("1_4w008")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="SpriteGreen" type="Sprite2D" parent="."]
 texture = ExtResource("1_norxp")
 region_enabled = true
-region_rect = Rect2(16.05494, 47.854504, 31.806232, 9.169533)
+region_rect = Rect2(16.05494, 0, 31.806232, 9)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_norxp")

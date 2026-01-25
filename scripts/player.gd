@@ -35,6 +35,16 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("run_right"):
 		animated_sprite.flip_h = false
 		direction += 1.0
+	
+	if is_on_floor():
+		if direction == 0.0:
+			animated_sprite.play("idle")
+		else:
+			animated_sprite.play("run")
+	else:
+		animated_sprite.play("jump")
+		
+	# Apply movement
 	if is_on_floor():
 		# Ground movement with acceleration and friction
 		if direction:
@@ -60,4 +70,3 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, AIR_FRICTION * delta)
 
 	move_and_slide()
-	#print('=========', '\n')
