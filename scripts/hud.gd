@@ -1,7 +1,6 @@
 extends CanvasLayer
 
 @onready var coin_label: Label = $HUDContainer/CoinLabel
-@onready var coin_icon: TextureRect = $HUDContainer/CoinIcon
 @onready var lives_label: Label = $HUDContainer/LivesLabel
 
 
