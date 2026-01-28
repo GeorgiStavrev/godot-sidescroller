@@ -36,7 +36,9 @@ func _update_focus_neighbors() -> void:
 	# Set focus neighbors for wrapping navigation
 	for i in visible_buttons.size():
 		var button := visible_buttons[i]
-		var prev_button := visible_buttons[(i - 1 + visible_buttons.size()) % visible_buttons.size()]
+		var prev_button := visible_buttons[
+			(i - 1 + visible_buttons.size()) % visible_buttons.size()
+		]
 		var next_button := visible_buttons[(i + 1) % visible_buttons.size()]
 		button.focus_neighbor_top = button.get_path_to(prev_button)
 		button.focus_neighbor_bottom = button.get_path_to(next_button)

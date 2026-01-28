@@ -69,10 +69,9 @@ func _collect_node_data() -> Array:
 	var nodes_data: Array = []
 	for node in get_tree().get_nodes_in_group("saveable"):
 		if node.has_method("serialize"):
-			nodes_data.append({
-				"name": node.name,
-				"data": node.serialize()
-			})
+			nodes_data.append(
+				{"name": node.name, "path": node.get_path(), "data": node.serialize()}
+			)
 		else:
 			push_warning("Node '%s' in 'saveable' group missing serialize()" % node.name)
 	return nodes_data
@@ -134,14 +133,15 @@ func load_game() -> bool:
 
 func _apply_node_save_data() -> void:
 	# Build a lookup of saved data by node name
-	var data_by_name := {}
+	var data_by_path := {}
 	for node_data in _pending_load_data:
-		data_by_name[node_data.name] = node_data.data
+		data_by_path[node_data.path] = node_data.data
 
 	# Apply to all saveable nodes
 	for node in get_tree().get_nodes_in_group("saveable"):
-		if node.name in data_by_name and node.has_method("deserialize"):
-			node.deserialize(data_by_name[node.name])
+		var path = str(node.get_path())
+		if path in data_by_path and node.has_method("deserialize"):
+			node.deserialize(data_by_path[path])
 
 	_pending_load_data = []
 

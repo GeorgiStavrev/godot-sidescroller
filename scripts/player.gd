@@ -6,6 +6,7 @@ extends CharacterBody2D
 func _ready() -> void:
 	add_to_group("saveable")
 
+
 const MAX_SPEED = 130.0
 const RUN_SPEED = 200.0  # Speed when holding Ctrl (run button)
 const JUMP_VELOCITY = -300.0
@@ -40,7 +41,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("run_right"):
 		animated_sprite.flip_h = false
 		direction += 1.0
-	
+
 	if is_on_floor():
 		if direction == 0.0:
 			animated_sprite.play("idle")
@@ -48,7 +49,7 @@ func _physics_process(delta: float) -> void:
 			animated_sprite.play("run")
 	else:
 		animated_sprite.play("jump")
-		
+
 	# Apply movement
 	if is_on_floor():
 		# Ground movement with acceleration and friction
