@@ -47,8 +47,9 @@ func _update_focus_neighbors() -> void:
 func _on_start_pressed() -> void:
 	GameManager.reset()
 	GameManager.level_active = true
-	GameManager.current_level_path = "res://scenes/game.tscn"
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	var start_scene = "res://scenes/level_1.tscn"
+	GameManager.current_level_path = start_scene
+	get_tree().change_scene_to_file(start_scene)
 
 
 func _on_continue_pressed() -> void:
