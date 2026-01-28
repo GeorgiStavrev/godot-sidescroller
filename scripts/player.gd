@@ -1,5 +1,10 @@
 extends CharacterBody2D
+
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
+
+func _ready() -> void:
+	add_to_group("saveable")
 
 const MAX_SPEED = 130.0
 const RUN_SPEED = 200.0  # Speed when holding Ctrl (run button)
@@ -70,3 +75,21 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, AIR_FRICTION * delta)
 
 	move_and_slide()
+
+
+func serialize() -> Dictionary:
+	return {
+		"position_x": position.x,
+		"position_y": position.y,
+		"velocity_x": velocity.x,
+		"velocity_y": velocity.y,
+		"flip_h": animated_sprite.flip_h,
+	}
+
+
+func deserialize(data: Dictionary) -> void:
+	position.x = data.get("position_x", position.x)
+	position.y = data.get("position_y", position.y)
+	velocity.x = data.get("velocity_x", 0.0)
+	velocity.y = data.get("velocity_y", 0.0)
+	animated_sprite.flip_h = data.get("flip_h", false)

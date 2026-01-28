@@ -347,19 +347,19 @@ _data = {
 
 [node name="Game" type="Node2D"]
 
-[node name="Player" parent="." instance=ExtResource("1_uwrxv")]
+[node name="Level1" type="Node" parent="."]
+
+[node name="Player" parent="Level1" instance=ExtResource("1_uwrxv")]
 unique_name_in_owner = true
 z_index = 1000
 position = Vector2(-12, -16)
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="Camera2D" type="Camera2D" parent="Level1/Player"]
 zoom = Vector2(3, 3)
 limit_bottom = 70
 position_smoothing_enabled = true
 
-[node name="HUD" parent="." instance=ExtResource("7_hud")]
-
-[node name="Level1" type="Node" parent="."]
+[node name="HUD" parent="Level1" instance=ExtResource("7_hud")]
 
 [node name="Killzone" parent="Level1" instance=ExtResource("4_u5sy4")]
 

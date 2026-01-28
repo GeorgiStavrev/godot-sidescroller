@@ -8,6 +8,7 @@ var direction: int = -1
 
 
 func _ready() -> void:
+	add_to_group("saveable")
 	sync_to_physics = true
 
 
@@ -18,3 +19,17 @@ func _physics_process(delta: float) -> void:
 		direction = -1
 
 	self.position.x += direction * speed * delta
+
+
+func serialize() -> Dictionary:
+	return {
+		"position_x": position.x,
+		"position_y": position.y,
+		"direction": direction,
+	}
+
+
+func deserialize(data: Dictionary) -> void:
+	position.x = data.get("position_x", position.x)
+	position.y = data.get("position_y", position.y)
+	direction = data.get("direction", direction)

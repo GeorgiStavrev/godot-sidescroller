@@ -8,7 +8,10 @@ var direction = 1
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _ready() -> void:
+	add_to_group("saveable")
+
+
 func _process(delta: float) -> void:
 	if ray_cast_right.is_colliding():
 		direction = -1
@@ -18,3 +21,18 @@ func _process(delta: float) -> void:
 		animated_sprite.flip_h = false
 
 	self.position.x += direction * SPEED * delta
+
+
+func serialize() -> Dictionary:
+	return {
+		"position_x": position.x,
+		"position_y": position.y,
+		"direction": direction,
+	}
+
+
+func deserialize(data: Dictionary) -> void:
+	position.x = data.get("position_x", position.x)
+	position.y = data.get("position_y", position.y)
+	direction = data.get("direction", direction)
+	animated_sprite.flip_h = direction == -1
