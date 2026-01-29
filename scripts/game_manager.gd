@@ -19,8 +19,10 @@ var lives: int = 3:
 
 var level_active: bool = false
 var current_level_path: String = ""
+var can_save: bool = false
 var _pending_load_data: Array = []
 var _captured_node_data: Array = []
+var _collected_coins: Array[String] = []
 
 
 func _ready() -> void:
@@ -41,6 +43,8 @@ func _process(_delta: float) -> void:
 			current_level_path = current_scene
 			# Capture node data while still in the level
 			_captured_node_data = _collect_node_data()
+			# Only allow saving if player is on the floor
+			can_save = _is_player_on_floor()
 			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 
@@ -52,7 +56,9 @@ func lose_live() -> void:
 	self.lives -= 1
 
 
-func collect_coin() -> void:
+func collect_coin(coin_path: String = "") -> void:
+	if coin_path != "" and coin_path not in _collected_coins:
+		_collected_coins.append(coin_path)
 	coins += 1
 	coin_collected.emit(1)
 
@@ -62,19 +68,37 @@ func reset() -> void:
 	lives = 3
 	level_active = false
 	current_level_path = ""
+	can_save = false
 	_captured_node_data = []
+	_collected_coins = []
+
+
+func _is_player_on_floor() -> bool:
+	var player := get_tree().current_scene.find_child("Player", true, false)
+	if player and player is CharacterBody2D:
+		return player.is_on_floor()
+	return false
 
 
 func _collect_node_data() -> Array:
 	var nodes_data: Array = []
 	for node in get_tree().get_nodes_in_group("saveable"):
 		if node.has_method("serialize"):
-			nodes_data.append(
-				{"name": node.name, "path": node.get_path(), "data": node.serialize()}
-			)
+			nodes_data.append({
+				"name": node.name,
+				"path": str(node.get_path()),
+				"data": node.serialize()
+			})
 		else:
 			push_warning("Node '%s' in 'saveable' group missing serialize()" % node.name)
 	return nodes_data
+
+
+func continue_game() -> void:
+	if current_level_path != "":
+		# Apply captured node data when scene loads (from memory, not file)
+		_pending_load_data = _captured_node_data
+		get_tree().change_scene_to_file(current_level_path)
 
 
 func save_game() -> bool:
@@ -82,7 +106,8 @@ func save_game() -> bool:
 		"coins": coins,
 		"lives": lives,
 		"level_path": current_level_path,
-		"nodes": _captured_node_data
+		"nodes": _captured_node_data,
+		"collected_coins": _collected_coins
 	}
 
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -122,6 +147,12 @@ func load_game() -> bool:
 	current_level_path = save_data.get("level_path", "")
 	level_active = true
 
+	# Restore collected coins
+	_collected_coins = []
+	var loaded_coins = save_data.get("collected_coins", [])
+	for coin_path in loaded_coins:
+		_collected_coins.append(str(coin_path))
+
 	# Load the level and apply node data
 	if current_level_path != "":
 		# Store data to apply after scene loads (will be applied in _process)
@@ -143,7 +174,17 @@ func _apply_node_save_data() -> void:
 		if path in data_by_path and node.has_method("deserialize"):
 			node.deserialize(data_by_path[path])
 
+	# Remove coins that were already collected
+	_remove_collected_coins()
+
 	_pending_load_data = []
+
+
+func _remove_collected_coins() -> void:
+	for coin_path in _collected_coins:
+		var coin = get_node_or_null(coin_path)
+		if coin:
+			coin.queue_free()
 
 
 func has_save_file() -> bool:

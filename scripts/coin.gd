@@ -6,5 +6,5 @@ func _on_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D:
 		var player_script = load("res://scripts/player.gd")
 		if body.get_script() == player_script:
-			GameManager.collect_coin()
+			GameManager.collect_coin(str(get_path()))
 			queue_free()
