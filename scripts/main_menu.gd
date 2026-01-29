@@ -18,9 +18,10 @@ func _ready() -> void:
 
 
 func _update_button_visibility() -> void:
-	# Continue and Save only show if a level is active
+	# Continue only shows if a level is active
 	continue_button.visible = GameManager.level_active
-	save_button.visible = GameManager.level_active
+	# Save only shows if level is active AND player was on the floor
+	save_button.visible = GameManager.level_active and GameManager.can_save
 
 	# Load only shows if there's a save file
 	load_button.visible = GameManager.has_save_file()
@@ -54,7 +55,7 @@ func _on_start_pressed() -> void:
 
 func _on_continue_pressed() -> void:
 	if GameManager.current_level_path != "":
-		get_tree().change_scene_to_file(GameManager.current_level_path)
+		GameManager.continue_game()
 
 
 func _on_save_pressed() -> void:

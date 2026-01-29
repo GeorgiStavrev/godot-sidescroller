@@ -94,3 +94,9 @@ func deserialize(data: Dictionary) -> void:
 	velocity.x = data.get("velocity_x", 0.0)
 	velocity.y = data.get("velocity_y", 0.0)
 	animated_sprite.flip_h = data.get("flip_h", false)
+
+	# Reset camera smoothing to prevent it from animating to the new position
+	var camera := get_node_or_null("Camera2D") as Camera2D
+	if camera:
+		camera.force_update_scroll()
+		camera.reset_smoothing()

@@ -30,6 +30,12 @@ func serialize() -> Dictionary:
 
 
 func deserialize(data: Dictionary) -> void:
-	position.x = data.get("position_x", position.x)
-	position.y = data.get("position_y", position.y)
+	# Temporarily disable sync_to_physics to allow direct position changes
+	var was_syncing := sync_to_physics
+	sync_to_physics = false
+	position = Vector2(
+		data.get("position_x", position.x),
+		data.get("position_y", position.y)
+	)
+	sync_to_physics = was_syncing
 	direction = data.get("direction", direction)
