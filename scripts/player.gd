@@ -1,7 +1,8 @@
 extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var collision_shape_crouching: CollisionShape2D = $CollisionShape2DCrouching
 
 func _ready() -> void:
 	add_to_group("saveable")
@@ -9,6 +10,7 @@ func _ready() -> void:
 
 const MAX_SPEED = 130.0
 const RUN_SPEED = 200.0  # Speed when holding Ctrl (run button)
+const CROUCH_SPEED = 60.0  # Slower speed when crouching
 const JUMP_VELOCITY = -300.0
 const JUMP_VELOCITY_RUNNING = -360.0  # Higher jump when running fast (like Mario)
 const GROUND_ACCELERATION = 800.0  # How fast Player accelerates on ground
@@ -25,14 +27,22 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	var is_running: bool = Input.is_action_pressed("sprint")
+	var is_crouching: bool = Input.is_action_pressed("crouch") and is_on_floor()
 
 	# Handle jump with inertia - jump higher when running fast (like Mario)
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	# Cannot jump while crouching
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_crouching:
 		var has_momentum: bool = is_running and abs(velocity.x) > INERTIA_THRESHOLD
 		velocity.y = JUMP_VELOCITY_RUNNING if has_momentum else JUMP_VELOCITY
 
-	# Determine current max speed based on run button
-	var current_max_speed := RUN_SPEED if is_running else MAX_SPEED
+	# Determine current max speed based on state
+	var current_max_speed: float
+	if is_crouching:
+		current_max_speed = CROUCH_SPEED
+	elif is_running:
+		current_max_speed = RUN_SPEED
+	else:
+		current_max_speed = MAX_SPEED
 
 	var direction := 0.0
 	if Input.is_action_pressed("run_left"):
@@ -43,11 +53,23 @@ func _physics_process(delta: float) -> void:
 		direction += 1.0
 
 	if is_on_floor():
-		if direction == 0.0:
-			animated_sprite.play("idle")
+		if is_crouching:
+			collision_shape.disabled = true
+			collision_shape_crouching.disabled = false
+			if direction == 0.0:
+				animated_sprite.play("crouch")
+			else:
+				animated_sprite.play("crouch_move")
 		else:
-			animated_sprite.play("run")
+			collision_shape.disabled = false
+			collision_shape_crouching.disabled = true
+			if direction == 0.0:
+				animated_sprite.play("idle")
+			else:
+				animated_sprite.play("run")
 	else:
+		collision_shape.disabled = true
+		collision_shape_crouching.disabled = false
 		animated_sprite.play("jump")
 
 	# Apply movement

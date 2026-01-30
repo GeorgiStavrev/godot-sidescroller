@@ -2,6 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Work process
+Always follow a strict 3-step loop:
+PLAN: Analyze the request, list affected files, and outline steps. Ask for approval.
+IMPLEMENT: Implement the changes, aiming for minimum viable code.
+VALIDATE: Run tests. If tests fail, fix them before finalizing.
+Do not skip steps.
+
+## Development process
+Always write tests as part of the implementation. You will use them in the VALIDATE step later.
+
 ## Project Overview
 
 A 2D sidescroller game built with Godot 4.5 featuring Mario-style movement physics with acceleration, inertia, and momentum-based mechanics.
