@@ -41,11 +41,7 @@ func test_serialize_contains_direction() -> void:
 
 
 func test_deserialize_restores_position() -> void:
-	var test_data := {
-		"position_x": 300.0,
-		"position_y": 400.0,
-		"direction": 1
-	}
+	var test_data := {"position_x": 300.0, "position_y": 400.0, "direction": 1}
 	slime.deserialize(test_data)
 
 	assert_eq(slime.position.x, 300.0)
@@ -53,11 +49,7 @@ func test_deserialize_restores_position() -> void:
 
 
 func test_deserialize_restores_direction() -> void:
-	var test_data := {
-		"position_x": 0.0,
-		"position_y": 0.0,
-		"direction": -1
-	}
+	var test_data := {"position_x": 0.0, "position_y": 0.0, "direction": -1}
 	slime.deserialize(test_data)
 	assert_eq(slime.direction, -1)
 

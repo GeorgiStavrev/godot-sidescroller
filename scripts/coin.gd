@@ -1,5 +1,7 @@
 extends Area2D
 
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+
 
 func _on_body_entered(body: Node2D) -> void:
 	# Check if the body is the player
@@ -7,4 +9,4 @@ func _on_body_entered(body: Node2D) -> void:
 		var player_script = load("res://scripts/player.gd")
 		if body.get_script() == player_script:
 			GameManager.collect_coin(str(get_path()))
-			queue_free()
+			animation_player.play("pickup")

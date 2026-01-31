@@ -41,11 +41,7 @@ func test_serialize_contains_direction() -> void:
 
 
 func test_deserialize_restores_position() -> void:
-	var test_data := {
-		"position_x": 500.0,
-		"position_y": 100.0,
-		"direction": 1
-	}
+	var test_data := {"position_x": 500.0, "position_y": 100.0, "direction": 1}
 	platform.deserialize(test_data)
 
 	assert_eq(platform.position.x, 500.0)
@@ -53,11 +49,7 @@ func test_deserialize_restores_position() -> void:
 
 
 func test_deserialize_restores_direction() -> void:
-	var test_data := {
-		"position_x": 0.0,
-		"position_y": 0.0,
-		"direction": 1
-	}
+	var test_data := {"position_x": 0.0, "position_y": 0.0, "direction": 1}
 	platform.deserialize(test_data)
 	assert_eq(platform.direction, 1)
 

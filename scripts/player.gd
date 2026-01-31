@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var collision_shape_crouching: CollisionShape2D = $CollisionShape2DCrouching
 
+
 func _ready() -> void:
 	add_to_group("saveable")
 
@@ -54,22 +55,28 @@ func _physics_process(delta: float) -> void:
 
 	if is_on_floor():
 		if is_crouching:
-			collision_shape.disabled = true
-			collision_shape_crouching.disabled = false
+			if collision_shape != null:
+				collision_shape.disabled = true
+			if collision_shape_crouching != null:
+				collision_shape_crouching.disabled = false
 			if direction == 0.0:
 				animated_sprite.play("crouch")
 			else:
 				animated_sprite.play("crouch_move")
 		else:
-			collision_shape.disabled = false
-			collision_shape_crouching.disabled = true
+			if collision_shape != null:
+				collision_shape.disabled = false
+			if collision_shape_crouching != null:
+				collision_shape_crouching.disabled = true
 			if direction == 0.0:
 				animated_sprite.play("idle")
 			else:
 				animated_sprite.play("run")
 	else:
-		collision_shape.disabled = true
-		collision_shape_crouching.disabled = false
+		if collision_shape != null:
+			collision_shape.disabled = true
+		if collision_shape_crouching != null:
+			collision_shape_crouching.disabled = false
 		animated_sprite.play("jump")
 
 	# Apply movement

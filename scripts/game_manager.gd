@@ -73,6 +73,10 @@ func reset() -> void:
 	_collected_coins = []
 
 
+func game_over() -> void:
+	get_tree().change_scene_to_file("res://scenes/game_over.tscn")
+
+
 func _is_player_on_floor() -> bool:
 	var player := get_tree().current_scene.find_child("Player", true, false)
 	if player and player is CharacterBody2D:
@@ -84,11 +88,9 @@ func _collect_node_data() -> Array:
 	var nodes_data: Array = []
 	for node in get_tree().get_nodes_in_group("saveable"):
 		if node.has_method("serialize"):
-			nodes_data.append({
-				"name": node.name,
-				"path": str(node.get_path()),
-				"data": node.serialize()
-			})
+			nodes_data.append(
+				{"name": node.name, "path": str(node.get_path()), "data": node.serialize()}
+			)
 		else:
 			push_warning("Node '%s' in 'saveable' group missing serialize()" % node.name)
 	return nodes_data

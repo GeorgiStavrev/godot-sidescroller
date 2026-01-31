@@ -14,12 +14,17 @@ func _is_player_node(body: Node2D) -> bool:
 func _on_body_entered(body: Node2D) -> void:
 	if _is_player_node(body):
 		Engine.time_scale = 0.5
-		body.get_node("CollisionShape2D").queue_free()
+		# Disable all collision shapes to prevent further collisions during death
+		for child in body.get_children():
+			if child is CollisionShape2D:
+				child.queue_free()
 		timer.start()
 
 
 func _on_timer_timeout() -> void:
 	Engine.time_scale = 1.0
 	GameManager.lose_live()
-	GameManager.reset()
-	get_tree().reload_current_scene()
+	if GameManager.lives <= 0:
+		GameManager.game_over()
+	else:
+		get_tree().reload_current_scene()
