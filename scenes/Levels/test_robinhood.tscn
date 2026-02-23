@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://kbigwj7x88j1"]
+
+[ext_resource type="PackedScene" uid="uid://bf2cb7c5wo1sh" path="res://scenes/Characters/Playable/player_robinHood.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://btvetxn3a0nfn" path="res://scenes/killzone.tscn" id="2_killzone"]
+[ext_resource type="PackedScene" uid="uid://60srmp8f1guv" path="res://scenes/Characters/NPCs/slime.tscn" id="3_slime"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
+size = Vector2(400, 32)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kill"]
+distance = 200.0
+
+[node name="TestRobinHood" type="Node"]
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(0, -50)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(3, 3)
+position_smoothing_enabled = true
+
+[node name="Ground" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="GroundSprite" type="ColorRect" parent="Ground"]
+offset_left = -200.0
+offset_top = -16.0
+offset_right = 200.0
+offset_bottom = 16.0
+color = Color(0.4, 0.3, 0.2, 1)
+
+[node name="Platform1" type="StaticBody2D" parent="."]
+position = Vector2(150, -60)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
+scale = Vector2(0.3, 0.5)
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="PlatformSprite" type="ColorRect" parent="Platform1"]
+offset_left = -60.0
+offset_top = -8.0
+offset_right = 60.0
+offset_bottom = 8.0
+color = Color(0.5, 0.4, 0.3, 1)
+
+[node name="Enemies" type="Node" parent="."]
+
+[node name="Slime" parent="Enemies" instance=ExtResource("3_slime")]
+position = Vector2(100, -30)
+
+[node name="Killzone" parent="." instance=ExtResource("2_killzone")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(0, 200)
+shape = SubResource("WorldBoundaryShape2D_kill")

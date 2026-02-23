@@ -1,0 +1,100 @@
+[gd_scene load_steps=13 format=3 uid="uid://djneiph0iypc7"]
+
+[ext_resource type="Script" uid="uid://de641p7nfjqs1" path="res://scripts/Weapons/bow.gd" id="1_bowscript"]
+[ext_resource type="Texture2D" uid="uid://c8m1eun5nhrt0" path="res://assets/sprites/weapons/weapons_.png" id="1_qowxe"]
+[ext_resource type="Texture2D" uid="uid://dygx081ckwy7v" path="res://assets/sprites/weapons/arrow_.png" id="3_arrow"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3tk26"]
+atlas = ExtResource("1_qowxe")
+region = Rect2(12, 0, 12, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0bou8"]
+atlas = ExtResource("1_qowxe")
+region = Rect2(24, 0, 12, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v2smg"]
+atlas = ExtResource("1_qowxe")
+region = Rect2(36, 0, 12, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ygehs"]
+atlas = ExtResource("1_qowxe")
+region = Rect2(12, 0, 12, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_16hve"]
+atlas = ExtResource("1_qowxe")
+region = Rect2(24, 0, 12, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ij3o"]
+atlas = ExtResource("1_qowxe")
+region = Rect2(36, 0, 12, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dj271"]
+atlas = ExtResource("1_qowxe")
+region = Rect2(36, 0, 12, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4wx71"]
+atlas = ExtResource("1_qowxe")
+region = Rect2(12, 0, 12, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wi6t8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3tk26")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0bou8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v2smg")
+}],
+"loop": false,
+"name": &"loaded",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ygehs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_16hve")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ij3o")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dj271")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4wx71")
+}],
+"loop": false,
+"name": &"shoot_from_loaded",
+"speed": 10.0
+}]
+
+[node name="Bow" type="Node2D"]
+script = ExtResource("1_bowscript")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_wi6t8")
+animation = &"shoot"
+autoplay = "idle"
+
+[node name="ArrowSpan" type="Marker2D" parent="."]
+position = Vector2(5, 0)
+
+[node name="NockedArrow" type="Sprite2D" parent="."]
+position = Vector2(5, 0)
+rotation = 1.5707964
+texture = ExtResource("3_arrow")

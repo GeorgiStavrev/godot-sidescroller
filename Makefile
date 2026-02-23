@@ -20,15 +20,17 @@ install-deps:
 
 # Install Godot addons
 install-addons:
-	@echo "Installing GUT v9.5.1..."
+	@echo "Installing GUT v9.5.0..."
 	@mkdir -p addons
-	@rm -rf addons/gut
-	@curl -sL https://github.com/bitwes/Gut/archive/refs/tags/v9.5.1.tar.gz | tar -xz -C addons
-	@mv addons/Gut-9.5.1 addons/gut
-	@echo "Addons installed!"
+	@rm -rf addons/gut /tmp/gut-download.tar.gz /tmp/Gut-9.5.0
+	@curl -L -o /tmp/gut-download.tar.gz https://github.com/bitwes/Gut/archive/refs/tags/v9.5.0.tar.gz
+	@tar -xzf /tmp/gut-download.tar.gz -C /tmp
+	@mv /tmp/Gut-9.5.0/addons/gut addons/gut
+	@rm -rf /tmp/gut-download.tar.gz /tmp/Gut-9.5.0
+	@echo "GUT installed successfully!"
 
-# Find all GDScript files recursively (excluding .godot and .git directories)
-GDFILES := $(shell find . -name "*.gd" -not -path "./.godot/*" -not -path "./.git/*" 2>/dev/null || find . -name "*.gd" -type f 2>/dev/null)
+# Find all GDScript files recursively (excluding .godot, .git, and addons directories)
+GDFILES := $(shell find . -name "*.gd" -not -path "./.godot/*" -not -path "./.git/*" -not -path "./addons/*" 2>/dev/null || find . -name "*.gd" -type f 2>/dev/null)
 
 # Lint all GDScript files
 lint:

@@ -1,6 +1,7 @@
 extends Control
 
 @onready var start_button: Button = $VBoxContainer/StartButton
+@onready var test_robinhood_button: Button = $VBoxContainer/TestRobinHoodButton
 @onready var continue_button: Button = $VBoxContainer/ContinueButton
 @onready var save_button: Button = $VBoxContainer/SaveButton
 @onready var load_button: Button = $VBoxContainer/LoadButton
@@ -30,7 +31,15 @@ func _update_button_visibility() -> void:
 func _update_focus_neighbors() -> void:
 	# Build list of visible buttons in order
 	var visible_buttons: Array[Button] = []
-	for button in [start_button, continue_button, save_button, load_button, exit_button]:
+	var all_buttons: Array[Button] = [
+		start_button,
+		test_robinhood_button,
+		continue_button,
+		save_button,
+		load_button,
+		exit_button,
+	]
+	for button in all_buttons:
 		if button.visible:
 			visible_buttons.append(button)
 
@@ -48,9 +57,17 @@ func _update_focus_neighbors() -> void:
 func _on_start_pressed() -> void:
 	GameManager.reset()
 	GameManager.level_active = true
-	var start_scene = "res://scenes/level_1.tscn"
+	var start_scene = "res://scenes/Levels/level_1.tscn"
 	GameManager.current_level_path = start_scene
 	get_tree().change_scene_to_file(start_scene)
+
+
+func _on_test_robinhood_pressed() -> void:
+	GameManager.reset()
+	GameManager.level_active = true
+	var test_scene = "res://scenes/Levels/test_robinhood.tscn"
+	GameManager.current_level_path = test_scene
+	get_tree().change_scene_to_file(test_scene)
 
 
 func _on_continue_pressed() -> void:

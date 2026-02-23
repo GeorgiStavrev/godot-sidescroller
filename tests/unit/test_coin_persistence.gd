@@ -15,7 +15,7 @@ func after_each() -> void:
 func test_collected_coins_included_in_save_data() -> void:
 	GameManager.collect_coin("/root/Level/Coins/Coin1")
 	GameManager.collect_coin("/root/Level/Coins/Coin2")
-	GameManager.current_level_path = "res://scenes/level_1.tscn"
+	GameManager.current_level_path = "res://scenes/Levels/level_1.tscn"
 	GameManager._captured_node_data = []
 
 	var result = GameManager.save_game()
@@ -38,7 +38,7 @@ func test_collected_coins_included_in_save_data() -> void:
 
 func test_save_preserves_coin_count() -> void:
 	GameManager.coins = 5
-	GameManager.current_level_path = "res://scenes/level_1.tscn"
+	GameManager.current_level_path = "res://scenes/Levels/level_1.tscn"
 	GameManager._captured_node_data = []
 
 	GameManager.save_game()
@@ -56,7 +56,7 @@ func test_save_preserves_coin_count() -> void:
 
 func test_save_preserves_lives() -> void:
 	GameManager.lives = 2
-	GameManager.current_level_path = "res://scenes/level_1.tscn"
+	GameManager.current_level_path = "res://scenes/Levels/level_1.tscn"
 	GameManager._captured_node_data = []
 
 	GameManager.save_game()
@@ -73,7 +73,7 @@ func test_save_preserves_lives() -> void:
 
 
 func test_save_preserves_level_path() -> void:
-	GameManager.current_level_path = "res://scenes/level_1.tscn"
+	GameManager.current_level_path = "res://scenes/Levels/level_1.tscn"
 	GameManager._captured_node_data = []
 
 	GameManager.save_game()
@@ -86,4 +86,4 @@ func test_save_preserves_level_path() -> void:
 	json.parse(json_string)
 	var data: Dictionary = json.data
 
-	assert_eq(data.level_path, "res://scenes/level_1.tscn")
+	assert_eq(data.level_path, "res://scenes/Levels/level_1.tscn")
