@@ -5,23 +5,32 @@ extends Node2D
 @onready var nocked_arrow: Sprite2D = $NockedArrow
 
 const ARROW_SCENE = preload("res://scenes/Weapons/arrow.tscn")
+const DRAW_OFFSET = 3.0  # How far back the arrow moves when drawn (in pixels)
+
+var _nocked_arrow_base_x: float = 0.0
+var _is_drawn: bool = false
 
 
 func _ready() -> void:
 	if sprite:
 		sprite.animation_finished.connect(_on_animation_finished)
+	if nocked_arrow:
+		_nocked_arrow_base_x = abs(nocked_arrow.position.x)
 
 
 func start_charge() -> void:
+	nocked_arrow.visible = true
+	_is_drawn = true
 	if sprite:
-		sprite.play("charge")
+		sprite.play("loaded")
 
 
 func shoot(
 	direction: Vector2, shooter_velocity: Vector2 = Vector2.ZERO, charge_ratio: float = 1.0
 ) -> void:
+	_is_drawn = false
 	if sprite:
-		sprite.play("shoot")
+		sprite.play("shoot_from_loaded")
 	if nocked_arrow:
 		nocked_arrow.visible = false
 
@@ -43,7 +52,10 @@ func set_flip(flip_h: bool) -> void:
 		)
 	if nocked_arrow:
 		nocked_arrow.flip_v = flip_h
-		nocked_arrow.position.x = arrow_spawn.position.x
+		var dir := -1.0 if flip_h else 1.0
+		var base_pos := dir * _nocked_arrow_base_x
+		var drawn_offset := -dir * DRAW_OFFSET if _is_drawn else 0.0
+		nocked_arrow.position.x = base_pos + drawn_offset
 
 
 func set_aim(direction: Vector2) -> void:

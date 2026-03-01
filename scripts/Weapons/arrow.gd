@@ -47,11 +47,12 @@ func _physics_process(_delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if _has_stopped:
 		return
-	_has_collided = true
 
 	# Ignore the player
 	if body.is_in_group("player"):
 		return
+
+	_has_collided = true
 
 	# Only deal damage if moving fast enough
 	if linear_velocity.length() < MIN_SPEED_TO_DAMAGE:

@@ -16,13 +16,16 @@ const GROUND_FRICTION_FAST = 200.0
 const AIR_ACCELERATION = 400.0
 const AIR_FRICTION = 200.0
 const INERTIA_THRESHOLD = 100.0
-const AIM_ANGLE = 45.0  # Degrees for up/down aiming
+const AIM_SPEED = 240.0  # Degrees per second
+const AIM_ANGLE_MIN = -90.0  # Up angle limit (degrees)
+const AIM_ANGLE_MAX = 90.0  # Down angle limit (degrees)
 const MAX_HEALTH = 100.0
 const MAX_CHARGE_TIME = 1.5  # Seconds to reach full charge
 
 var _facing_right: bool = true
 var _current_weapon: Node = null
 var _aim_direction: Vector2 = Vector2.RIGHT
+var _aim_angle: float = 0.0  # Current aim angle in degrees
 var _charge_start_time: float = 0.0
 var _is_charging: bool = false
 
@@ -38,7 +41,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
 	_handle_jump()
-	_update_aim()
+	_update_aim(delta)
 	_handle_shoot()
 
 	var direction := _get_input_direction()
@@ -78,23 +81,25 @@ func _handle_jump() -> void:
 	velocity.y = JUMP_VELOCITY_RUNNING if has_momentum else JUMP_VELOCITY
 
 
-func _update_aim() -> void:
+func _update_aim(delta: float) -> void:
 	var horizontal := 1.0 if _facing_right else -1.0
-	var vertical := 0.0
+	var aim_input := 0.0
 
 	if Input.is_action_pressed("aim_up"):
-		vertical = -1.0
+		aim_input = -1.0
 	elif Input.is_action_pressed("aim_down"):
-		vertical = 1.0
+		aim_input = 1.0
 
-	if vertical != 0.0:
-		var angle_rad := deg_to_rad(AIM_ANGLE) * vertical
-		# Invert rotation when facing left
-		if not _facing_right:
-			angle_rad = -angle_rad
-		_aim_direction = Vector2(horizontal, 0).rotated(angle_rad)
-	else:
-		_aim_direction = Vector2(horizontal, 0)
+	# Continuously move aim angle while holding up/down
+	if aim_input != 0.0:
+		_aim_angle += aim_input * AIM_SPEED * delta
+		_aim_angle = clampf(_aim_angle, AIM_ANGLE_MIN, AIM_ANGLE_MAX)
+
+	var angle_rad := deg_to_rad(_aim_angle)
+	# Invert rotation when facing left
+	if not _facing_right:
+		angle_rad = -angle_rad
+	_aim_direction = Vector2(horizontal, 0).rotated(angle_rad)
 
 
 func _handle_shoot() -> void:
