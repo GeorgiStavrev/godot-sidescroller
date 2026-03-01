@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://kbigwj7x88j1"]
+[gd_scene load_steps=8 format=3 uid="uid://kbigwj7x88j1"]
 
 [ext_resource type="PackedScene" uid="uid://bf2cb7c5wo1sh" path="res://scenes/Characters/Playable/player_robinHood.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://btvetxn3a0nfn" path="res://scenes/killzone.tscn" id="2_killzone"]
+[ext_resource type="PackedScene" uid="uid://dqa01xdajdmpt" path="res://scenes/platform.tscn" id="3_s2v55"]
 [ext_resource type="PackedScene" uid="uid://60srmp8f1guv" path="res://scenes/Characters/NPCs/slime.tscn" id="3_slime"]
+[ext_resource type="PackedScene" uid="uid://dqdlgd46e1q1s" path="res://scenes/self_directed_platform.tscn" id="4_whjwk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(400, 32)
@@ -13,15 +15,37 @@ distance = 200.0
 [node name="TestRobinHood" type="Node"]
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
-position = Vector2(0, -50)
+position = Vector2(-183, -33)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-zoom = Vector2(3, 3)
+zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 
 [node name="Ground" type="StaticBody2D" parent="."]
 
+[node name="GroundSprite3" type="ColorRect" parent="Ground"]
+offset_left = 200.0
+offset_top = -47.0
+offset_right = 600.0
+offset_bottom = -15.0
+color = Color(0.4, 0.3, 0.2, 1)
+
+[node name="GroundSprite2" type="ColorRect" parent="Ground"]
+offset_left = -599.0
+offset_top = -49.0
+offset_right = -199.0
+offset_bottom = -17.0
+color = Color(0.4, 0.3, 0.2, 1)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Ground"]
+position = Vector2(-399, -33)
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Ground"]
+position = Vector2(400, -31)
 shape = SubResource("RectangleShape2D_ground")
 
 [node name="GroundSprite" type="ColorRect" parent="Ground"]
@@ -48,10 +72,28 @@ color = Color(0.5, 0.4, 0.3, 1)
 [node name="Enemies" type="Node" parent="."]
 
 [node name="Slime" parent="Enemies" instance=ExtResource("3_slime")]
-position = Vector2(100, -30)
+position = Vector2(101, -28)
+
+[node name="Platform" parent="Enemies" instance=ExtResource("3_s2v55")]
+position = Vector2(43, -48)
+
+[node name="Platform2" parent="Enemies" instance=ExtResource("3_s2v55")]
+position = Vector2(-20, -48)
+
+[node name="SelfDirectedPlatform" parent="Enemies" instance=ExtResource("4_whjwk")]
+position = Vector2(-108, -48)
 
 [node name="Killzone" parent="." instance=ExtResource("2_killzone")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
 position = Vector2(0, 200)
 shape = SubResource("WorldBoundaryShape2D_kill")
+
+[node name="Slime" parent="." instance=ExtResource("3_slime")]
+position = Vector2(-161, -28)
+
+[node name="Slime3" parent="." instance=ExtResource("3_slime")]
+position = Vector2(-229, -62)
+
+[node name="Slime2" parent="." instance=ExtResource("3_slime")]
+position = Vector2(131, -80)

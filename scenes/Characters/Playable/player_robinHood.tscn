@@ -115,7 +115,6 @@ script = ExtResource("2_script")
 sprite_frames = SubResource("SpriteFrames_qbl1n")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.009629208
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)
@@ -123,3 +122,13 @@ shape = SubResource("RectangleShape2D_yoiui")
 
 [node name="WeaponSlot" type="Node2D" parent="."]
 position = Vector2(6, 3)
+
+[node name="ChargeBar" type="ProgressBar" parent="."]
+visible = false
+offset_left = -12.0
+offset_top = -16.0
+offset_right = 12.0
+offset_bottom = -12.0
+max_value = 1.0
+step = 0.01
+show_percentage = false

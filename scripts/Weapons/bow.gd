@@ -12,15 +12,25 @@ func _ready() -> void:
 		sprite.animation_finished.connect(_on_animation_finished)
 
 
-func shoot(direction: Vector2) -> void:
+func start_charge() -> void:
+	if sprite:
+		sprite.play("charge")
+
+
+func shoot(
+	direction: Vector2, shooter_velocity: Vector2 = Vector2.ZERO, charge_ratio: float = 1.0
+) -> void:
 	if sprite:
 		sprite.play("shoot")
 	if nocked_arrow:
 		nocked_arrow.visible = false
 
 	var arrow = ARROW_SCENE.instantiate()
-	arrow.global_position = arrow_spawn.global_position
+	# Offset spawn position in shoot direction to avoid spawning inside surfaces
+	arrow.global_position = arrow_spawn.global_position + direction * 10.0
 	arrow.direction = direction
+	arrow.shooter_velocity = shooter_velocity
+	arrow.charge_ratio = charge_ratio
 	get_tree().current_scene.add_child(arrow)
 
 

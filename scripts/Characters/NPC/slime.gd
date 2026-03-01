@@ -19,6 +19,8 @@ func _ready() -> void:
 func _on_animation_finished() -> void:
 	if animated_sprite.animation == "hurt":
 		animated_sprite.play("default")
+	if animated_sprite.animation == "death":
+		queue_free()
 
 
 func _process(delta: float) -> void:

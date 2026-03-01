@@ -1,14 +1,27 @@
-[gd_scene load_steps=4 format=3 uid="uid://bln754mai8dum"]
+[gd_scene load_steps=6 format=3 uid="uid://bln754mai8dum"]
 
 [ext_resource type="Script" uid="uid://b8e87hf4yqf7v" path="res://scripts/Weapons/arrow.gd" id="1_arrow"]
 [ext_resource type="Texture2D" uid="uid://dygx081ckwy7v" path="res://assets/sprites/weapons/arrow_.png" id="1_njoru"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bounce"]
+friction = 0.1
+bounce = 0.2
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6sh4u"]
+radius = 2.0
+height = 14.0
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_njoru"]
 size = Vector2(4, 14)
 
-[node name="Arrow" type="Area2D"]
+[node name="Arrow" type="RigidBody2D"]
 collision_layer = 2
 collision_mask = 5
+physics_material_override = SubResource("PhysicsMaterial_bounce")
+gravity_scale = 0.15
+continuous_cd = 2
+contact_monitor = true
+max_contacts_reported = 4
 script = ExtResource("1_arrow")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -18,5 +31,13 @@ region_enabled = true
 region_rect = Rect2(4, 5, 4, 14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_6sh4u")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 rotation = 1.5707964
 shape = SubResource("RectangleShape2D_njoru")

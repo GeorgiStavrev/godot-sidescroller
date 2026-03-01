@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var weapon_slot: Node2D = $WeaponSlot
+@onready var charge_bar: ProgressBar = $ChargeBar
 
 const BOW_SCENE = preload("res://scenes/Weapons/bow.tscn")
 
@@ -16,10 +17,16 @@ const AIR_ACCELERATION = 400.0
 const AIR_FRICTION = 200.0
 const INERTIA_THRESHOLD = 100.0
 const AIM_ANGLE = 45.0  # Degrees for up/down aiming
+const MAX_HEALTH = 100.0
+const MAX_CHARGE_TIME = 1.5  # Seconds to reach full charge
 
 var _facing_right: bool = true
 var _current_weapon: Node = null
 var _aim_direction: Vector2 = Vector2.RIGHT
+var _charge_start_time: float = 0.0
+var _is_charging: bool = false
+
+var health: float = MAX_HEALTH
 
 
 func _ready() -> void:
@@ -91,14 +98,33 @@ func _update_aim() -> void:
 
 
 func _handle_shoot() -> void:
-	if not Input.is_action_just_pressed("shoot"):
-		return
 	if not _current_weapon:
 		return
 	if not _current_weapon.has_method("shoot"):
 		return
 
-	_current_weapon.shoot(_aim_direction)
+	# Start charging when shoot is pressed
+	if Input.is_action_just_pressed("shoot"):
+		_is_charging = true
+		_charge_start_time = Time.get_ticks_msec() / 1000.0
+		charge_bar.visible = true
+		charge_bar.value = 0.0
+		if _current_weapon.has_method("start_charge"):
+			_current_weapon.start_charge()
+
+	# Update charge bar while holding
+	if _is_charging:
+		var charge_time: float = Time.get_ticks_msec() / 1000.0 - _charge_start_time
+		var charge_ratio: float = clampf(charge_time / MAX_CHARGE_TIME, 0.0, 1.0)
+		charge_bar.value = charge_ratio
+
+	# Release to shoot with accumulated charge
+	if Input.is_action_just_released("shoot") and _is_charging:
+		var charge_time: float = Time.get_ticks_msec() / 1000.0 - _charge_start_time
+		var charge_ratio: float = clampf(charge_time / MAX_CHARGE_TIME, 0.0, 1.0)
+		_current_weapon.shoot(_aim_direction, velocity, charge_ratio)
+		_is_charging = false
+		charge_bar.visible = false
 
 
 func _get_input_direction() -> float:
@@ -167,6 +193,13 @@ func _apply_air_movement(delta: float, direction: float, max_speed: float) -> vo
 		velocity.x = move_toward(velocity.x, direction * max_speed, AIR_ACCELERATION * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, AIR_FRICTION * delta)
+
+
+#func take_damage(damage: float) -> void:
+#health -= damage
+#animated_sprite.play("hurt")
+#if health <= 0:
+#animated_sprite.play("death")
 
 
 func serialize() -> Dictionary:
