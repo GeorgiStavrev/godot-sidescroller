@@ -1,8 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://60srmp8f1guv"]
+[gd_scene load_steps=18 format=3 uid="uid://60srmp8f1guv"]
 
 [ext_resource type="Script" uid="uid://0k25jjpsoipc" path="res://scripts/Characters/NPC/slime.gd" id="1_n6pvg"]
 [ext_resource type="Texture2D" uid="uid://dqike8fmnyj4u" path="res://assets/sprites/slime_green.png" id="1_p2gj0"]
 [ext_resource type="PackedScene" uid="uid://btvetxn3a0nfn" path="res://scenes/killzone.tscn" id="2_n6pvg"]
+[ext_resource type="PackedScene" path="res://scenes/UI/health_bar.tscn" id="4_health"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1vytc"]
 atlas = ExtResource("1_p2gj0")
@@ -139,5 +140,9 @@ target_position = Vector2(10, 0)
 [node name="RayCastLeft" type="RayCast2D" parent="."]
 position = Vector2(0, 5)
 target_position = Vector2(-10, 0)
+
+[node name="HealthBar" parent="." instance=ExtResource("4_health")]
+offset_top = -9.0
+offset_bottom = -4.0
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_finished"]

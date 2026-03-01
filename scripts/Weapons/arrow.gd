@@ -6,17 +6,17 @@ const LIFETIME = 10.0
 const MIN_DAMAGE = 5.0
 const MAX_DAMAGE = 25.0
 const MIN_SPEED_TO_DAMAGE = 50.0
-const MIN_CHARGE_TO_STICK = 0.5  # Minimum charge ratio to stick to surfaces
+const MIN_POWER_TO_STICK = 0.5  # Minimum charge ratio to stick to surfaces
 
 var direction: Vector2 = Vector2.RIGHT
 var shooter_velocity: Vector2 = Vector2.ZERO
-var charge_ratio: float = 1.0
+var power: float = 1.0
 var _has_stopped: bool = false
 var _has_collided: bool = false
 
 
 func _ready() -> void:
-	var speed := MIN_SPEED + (MAX_SPEED - MIN_SPEED) * charge_ratio
+	var speed := MIN_SPEED + (MAX_SPEED - MIN_SPEED) * power
 	linear_velocity = direction * speed + shooter_velocity
 	rotation = linear_velocity.angle()
 
@@ -59,7 +59,7 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 
 	# Calculate damage based on charge
-	var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * charge_ratio
+	var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
 
 	if body.has_method("take_damage"):
 		body.take_damage(damage)
@@ -72,7 +72,7 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 
 	# Surfaces: stick if enough charge, otherwise bounce
-	if charge_ratio >= MIN_CHARGE_TO_STICK:
+	if power >= MIN_POWER_TO_STICK:
 		call_deferred("_stick_to_surface", body)
 	# Low power arrows bounce off (physics handles it)
 
@@ -90,7 +90,7 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 
 	# Calculate damage based on charge
-	var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * charge_ratio
+	var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
 
 	if area.has_method("take_damage"):
 		area.take_damage(damage)
