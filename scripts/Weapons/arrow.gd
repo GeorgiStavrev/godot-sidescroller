@@ -54,21 +54,22 @@ func _on_body_entered(body: Node2D) -> void:
 
 	_has_collided = true
 
-	# Only deal damage if moving fast enough
-	if linear_velocity.length() < MIN_SPEED_TO_DAMAGE:
-		return
-
-	# Calculate damage based on charge
-	var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
-
+	# Priority: enemies first - no velocity check, always damage if touched
 	if body.has_method("take_damage"):
+		_has_stopped = true
+		var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
 		body.take_damage(damage)
-		_handle_enemy_hit(body)
+		call_deferred("_attach_to", body)
 		return
 
 	if body.is_in_group("enemies"):
+		_has_stopped = true
 		body.queue_free()
-		call_deferred("_stop")
+		freeze = true
+		return
+
+	# Surfaces: check velocity before sticking
+	if linear_velocity.length() < MIN_SPEED_TO_DAMAGE:
 		return
 
 	# Surfaces: stick if enough charge, otherwise bounce
@@ -85,37 +86,27 @@ func _on_area_entered(area: Area2D) -> void:
 	if not area.is_in_group("enemies"):
 		return
 
-	# Only deal damage if moving fast enough
-	if linear_velocity.length() < MIN_SPEED_TO_DAMAGE:
-		return
+	# Find the entity to damage (area itself or its parent)
+	var target: Node = area
+	if not area.has_method("take_damage") and area.get_parent().has_method("take_damage"):
+		target = area.get_parent()
 
-	# Calculate damage based on charge
-	var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
-
-	if area.has_method("take_damage"):
-		area.take_damage(damage)
-		_handle_enemy_hit(area)
-	else:
-		area.queue_free()
-		call_deferred("_stop")
-
-
-func _handle_enemy_hit(target: Node2D) -> void:
-	if is_instance_valid(target):
-		# Attach to enemy (alive or dying) so arrow follows them
+	# No velocity check for enemies - always damage if touched
+	if target.has_method("take_damage"):
+		_has_stopped = true
+		var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
+		target.take_damage(damage)
 		call_deferred("_attach_to", target)
 	else:
-		call_deferred("_stop")
+		_has_stopped = true
+		freeze = true
 
 
 func _attach_to(target: Node2D) -> void:
-	if _has_stopped:
-		return
 	if not is_instance_valid(target):
-		_stop()
+		freeze = true
 		return
 
-	_has_stopped = true
 	freeze = true
 
 	# Disable collisions

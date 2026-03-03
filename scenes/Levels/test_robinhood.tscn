@@ -1,13 +1,20 @@
-[gd_scene load_steps=8 format=3 uid="uid://kbigwj7x88j1"]
+[gd_scene load_steps=11 format=3 uid="uid://kbigwj7x88j1"]
 
 [ext_resource type="PackedScene" uid="uid://bf2cb7c5wo1sh" path="res://scenes/Characters/Playable/player_robinHood.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://btvetxn3a0nfn" path="res://scenes/killzone.tscn" id="2_killzone"]
 [ext_resource type="PackedScene" uid="uid://dqa01xdajdmpt" path="res://scenes/platform.tscn" id="3_s2v55"]
 [ext_resource type="PackedScene" uid="uid://60srmp8f1guv" path="res://scenes/Characters/NPCs/slime.tscn" id="3_slime"]
 [ext_resource type="PackedScene" uid="uid://dqdlgd46e1q1s" path="res://scenes/self_directed_platform.tscn" id="4_whjwk"]
+[ext_resource type="Script" uid="uid://c3dxe6np1uxdp" path="res://scripts/spawner.gd" id="5_spawner"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_whjwk"]
+distance = -708.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(400, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_whjwk"]
+size = Vector2(20, 77)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kill"]
 distance = 200.0
@@ -22,6 +29,11 @@ zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 
 [node name="Ground" type="StaticBody2D" parent="."]
+
+[node name="BoundaryLeft" type="CollisionShape2D" parent="Ground"]
+position = Vector2(200, -47)
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_whjwk")
 
 [node name="GroundSprite3" type="ColorRect" parent="Ground"]
 offset_left = 200.0
@@ -54,6 +66,10 @@ offset_top = -16.0
 offset_right = 200.0
 offset_bottom = 16.0
 color = Color(0.4, 0.3, 0.2, 1)
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Ground"]
+position = Vector2(527, -86.5)
+shape = SubResource("RectangleShape2D_whjwk")
 
 [node name="Platform1" type="StaticBody2D" parent="."]
 position = Vector2(150, -60)
@@ -97,3 +113,10 @@ position = Vector2(-229, -62)
 
 [node name="Slime2" parent="." instance=ExtResource("3_slime")]
 position = Vector2(131, -80)
+
+[node name="SlimeSpawner" type="Node2D" parent="."]
+position = Vector2(-21, -95)
+script = ExtResource("5_spawner")
+enemy_scene = ExtResource("3_slime")
+spawn_area_min = Vector2(-150, -50)
+spawn_area_max = Vector2(150, 50)

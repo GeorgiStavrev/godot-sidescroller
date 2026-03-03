@@ -200,11 +200,12 @@ func _apply_air_movement(delta: float, direction: float, max_speed: float) -> vo
 		velocity.x = move_toward(velocity.x, 0, AIR_FRICTION * delta)
 
 
-#func take_damage(damage: float) -> void:
-#health -= damage
-#animated_sprite.play("hurt")
-#if health <= 0:
-#animated_sprite.play("death")
+func take_damage(damage: float) -> void:
+	health -= damage
+	print("Player took damage: ", damage, " Health: ", health)
+	if health <= 0:
+		print("Player died!")
+		# TODO: Handle player death
 
 
 func serialize() -> Dictionary:

@@ -1,7 +1,8 @@
-extends Area2D
+extends CharacterBody2D
 
 const SPEED = 30.0
 const MAX_HEALTH = 20.0
+const GRAVITY = 400.0
 
 var direction = 1
 var health: float = MAX_HEALTH
@@ -13,6 +14,10 @@ var health: float = MAX_HEALTH
 func _ready() -> void:
 	add_to_group("saveable")
 	add_to_group("enemies")
+	# Add hitbox to enemies group so arrows can detect it
+	var hitbox := $Hitbox as Area2D
+	if hitbox:
+		hitbox.add_to_group("enemies")
 	animated_sprite.animation_finished.connect(_on_animation_finished)
 
 
@@ -23,7 +28,14 @@ func _on_animation_finished() -> void:
 		queue_free()
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	# Apply gravity
+	if not is_on_floor():
+		velocity.y += GRAVITY * delta
+	else:
+		velocity.y = 0.0
+
+	# Horizontal movement and direction change
 	if ray_cast_right.is_colliding():
 		direction = -1
 		animated_sprite.flip_h = true
@@ -31,7 +43,11 @@ func _process(delta: float) -> void:
 		direction = 1
 		animated_sprite.flip_h = false
 
-	self.position.x += direction * SPEED * delta
+	velocity.x = direction * SPEED
+	move_and_slide()
+
+
+const CONTACT_DAMAGE = 10.0
 
 
 func take_damage(damage: float) -> void:
@@ -39,6 +55,11 @@ func take_damage(damage: float) -> void:
 	animated_sprite.play("hurt")
 	if health <= 0:
 		animated_sprite.play("death")
+
+
+func _on_hitbox_body_entered(body: Node2D) -> void:
+	if body.is_in_group("player") and body.has_method("take_damage"):
+		body.take_damage(CONTACT_DAMAGE)
 
 
 func serialize() -> Dictionary:
@@ -54,10 +75,3 @@ func deserialize(data: Dictionary) -> void:
 	position.y = data.get("position_y", position.y)
 	direction = data.get("direction", direction)
 	animated_sprite.flip_h = direction == -1
-
-
-func _on_animated_finished() -> void:
-	if animated_sprite.animation == "hurt":
-		animated_sprite.play("default")
-	if animated_sprite.animation == "death":
-		queue_free()

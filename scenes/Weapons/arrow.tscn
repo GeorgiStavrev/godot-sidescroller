@@ -16,7 +16,7 @@ size = Vector2(4, 14)
 
 [node name="Arrow" type="RigidBody2D"]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 13
 physics_material_override = SubResource("PhysicsMaterial_bounce")
 gravity_scale = 0.15
 continuous_cd = 2

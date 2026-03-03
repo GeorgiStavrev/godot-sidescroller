@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://60srmp8f1guv"]
+[gd_scene load_steps=19 format=3 uid="uid://60srmp8f1guv"]
 
 [ext_resource type="Script" uid="uid://0k25jjpsoipc" path="res://scripts/Characters/NPC/slime.gd" id="1_n6pvg"]
 [ext_resource type="Texture2D" uid="uid://dqike8fmnyj4u" path="res://assets/sprites/slime_green.png" id="1_p2gj0"]
@@ -68,7 +68,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"death",
-"speed": 15.0
+"speed": 25.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -105,15 +105,17 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(14, 15)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(14, 15)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0l8pv"]
-size = Vector2(12, 13)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_killzone"]
+size = Vector2(14, 12)
 
-[node name="Slime" type="Area2D"]
+[node name="Slime" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 0
 script = ExtResource("1_n6pvg")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -123,15 +125,23 @@ autoplay = "default"
 frame = 5
 frame_progress = 1.0
 
-[node name="HitboxShape" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4.5)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(0, 4.5)
 shape = SubResource("RectangleShape2D_hitbox")
 
 [node name="Killzone" parent="." instance=ExtResource("2_n6pvg")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
-position = Vector2(0, 5.5)
-shape = SubResource("RectangleShape2D_0l8pv")
+position = Vector2(0, 6)
+shape = SubResource("RectangleShape2D_killzone")
 
 [node name="RayCastRight" type="RayCast2D" parent="."]
 position = Vector2(0, 5)
@@ -145,4 +155,5 @@ target_position = Vector2(-10, 0)
 offset_top = -9.0
 offset_bottom = -4.0
 
-[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_finished"]
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animation_finished"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
