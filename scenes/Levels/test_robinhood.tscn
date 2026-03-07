@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://kbigwj7x88j1"]
+[gd_scene load_steps=13 format=3 uid="uid://kbigwj7x88j1"]
 
 [ext_resource type="PackedScene" uid="uid://bf2cb7c5wo1sh" path="res://scenes/Characters/Playable/player_robinHood.tscn" id="1_player"]
+[ext_resource type="Script" uid="uid://dhdwbe7wogw3x" path="res://scenes/Levels/test_robinhood.gd" id="1_xhxy2"]
 [ext_resource type="PackedScene" uid="uid://btvetxn3a0nfn" path="res://scenes/killzone.tscn" id="2_killzone"]
 [ext_resource type="PackedScene" uid="uid://dqa01xdajdmpt" path="res://scenes/platform.tscn" id="3_s2v55"]
 [ext_resource type="PackedScene" uid="uid://60srmp8f1guv" path="res://scenes/Characters/NPCs/slime.tscn" id="3_slime"]
@@ -16,10 +17,14 @@ size = Vector2(400, 32)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_whjwk"]
 size = Vector2(20, 77)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xhxy2"]
+size = Vector2(21.031788, 19.790817)
+
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kill"]
 distance = 200.0
 
 [node name="TestRobinHood" type="Node"]
+script = ExtResource("1_xhxy2")
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
 position = Vector2(-183, -33)
@@ -68,22 +73,30 @@ offset_bottom = 16.0
 color = Color(0.4, 0.3, 0.2, 1)
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="Ground"]
-position = Vector2(527, -86.5)
+position = Vector2(527, -85)
 shape = SubResource("RectangleShape2D_whjwk")
 
-[node name="Platform1" type="StaticBody2D" parent="."]
-position = Vector2(150, -60)
+[node name="ramp" type="ColorRect" parent="Ground"]
+offset_left = 114.000015
+offset_top = -13.000004
+offset_right = 206.42665
+offset_bottom = 26.999996
+rotation = -0.3768137
+color = Color(0.4, 0.3019608, 0.2, 1)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
-scale = Vector2(0.3, 0.5)
-shape = SubResource("RectangleShape2D_ground")
+[node name="ramp_collision" type="CollisionShape2D" parent="Ground"]
+position = Vector2(163.95158, -13.122657)
+rotation = -0.37608483
+scale = Vector2(4.372397, 1.8443879)
+shape = SubResource("RectangleShape2D_xhxy2")
 
-[node name="PlatformSprite" type="ColorRect" parent="Platform1"]
-offset_left = -60.0
-offset_top = -8.0
-offset_right = 60.0
-offset_bottom = 8.0
-color = Color(0.5, 0.4, 0.3, 1)
+[node name="ColorRect" type="ColorRect" parent="Ground"]
+offset_left = 517.0
+offset_top = -124.0
+offset_right = 557.0
+offset_bottom = -84.0
+scale = Vector2(1.2826107, 1.9511306)
+color = Color(0.4, 0.3019608, 0.2, 1)
 
 [node name="Enemies" type="Node" parent="."]
 
@@ -104,15 +117,6 @@ position = Vector2(-108, -48)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
 position = Vector2(0, 200)
 shape = SubResource("WorldBoundaryShape2D_kill")
-
-[node name="Slime" parent="." instance=ExtResource("3_slime")]
-position = Vector2(-161, -28)
-
-[node name="Slime3" parent="." instance=ExtResource("3_slime")]
-position = Vector2(-229, -62)
-
-[node name="Slime2" parent="." instance=ExtResource("3_slime")]
-position = Vector2(131, -80)
 
 [node name="SlimeSpawner" type="Node2D" parent="."]
 position = Vector2(-21, -95)

@@ -16,7 +16,7 @@ size = Vector2(4, 14)
 
 [node name="Arrow" type="RigidBody2D"]
 collision_layer = 2
-collision_mask = 13
+collision_mask = 9
 physics_material_override = SubResource("PhysicsMaterial_bounce")
 gravity_scale = 0.15
 continuous_cd = 2
@@ -36,7 +36,7 @@ shape = SubResource("CapsuleShape2D_6sh4u")
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 2
-collision_mask = 4
+collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 rotation = 1.5707964

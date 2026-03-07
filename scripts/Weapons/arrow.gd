@@ -54,12 +54,8 @@ func _on_body_entered(body: Node2D) -> void:
 
 	_has_collided = true
 
-	# Priority: enemies first - no velocity check, always damage if touched
-	if body.has_method("take_damage"):
-		_has_stopped = true
-		var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
-		body.take_damage(damage)
-		call_deferred("_attach_to", body)
+	# Skip bodies that have hitbox children - let area detection handle them
+	if _has_hitbox_child(body):
 		return
 
 	if body.is_in_group("enemies"):
@@ -82,24 +78,18 @@ func _on_area_entered(area: Area2D) -> void:
 	if _has_stopped:
 		return
 
+	# Check if this is a Hitbox component
+	if area.is_in_group("hitbox"):
+		_has_stopped = true
+		var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
+		area.hit(damage)
+		# Attach to the hitbox itself
+		call_deferred("_attach_to", area)
+		return
+
 	# Ignore non-enemies
 	if not area.is_in_group("enemies"):
 		return
-
-	# Find the entity to damage (area itself or its parent)
-	var target: Node = area
-	if not area.has_method("take_damage") and area.get_parent().has_method("take_damage"):
-		target = area.get_parent()
-
-	# No velocity check for enemies - always damage if touched
-	if target.has_method("take_damage"):
-		_has_stopped = true
-		var damage := MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * power
-		target.take_damage(damage)
-		call_deferred("_attach_to", target)
-	else:
-		_has_stopped = true
-		freeze = true
 
 
 func _attach_to(target: Node2D) -> void:
@@ -115,8 +105,14 @@ func _attach_to(target: Node2D) -> void:
 		hitbox.monitoring = false
 	contact_monitor = false
 
-	# Destroy arrow when target dies
-	target.tree_exiting.connect(queue_free)
+	# Get the damage receiver (parent of hitbox component) for death signal
+	var damage_receiver: Node = target
+	if target.has_method("get_damage_receiver"):
+		damage_receiver = target.get_damage_receiver()
+
+	# Destroy arrow when damage receiver dies
+	if is_instance_valid(damage_receiver):
+		damage_receiver.tree_exiting.connect(queue_free)
 
 	# Reparent to target (keeps global transform)
 	reparent(target)
@@ -139,3 +135,10 @@ func _stick_to_surface(body: Node2D) -> void:
 func _stop() -> void:
 	_has_stopped = true
 	freeze = true
+
+
+func _has_hitbox_child(node: Node) -> bool:
+	for child in node.get_children():
+		if child.is_in_group("hitbox"):
+			return true
+	return false

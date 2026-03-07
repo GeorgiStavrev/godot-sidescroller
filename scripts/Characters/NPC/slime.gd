@@ -14,11 +14,6 @@ var health: float = MAX_HEALTH
 func _ready() -> void:
 	add_to_group("saveable")
 	add_to_group("enemies")
-	# Add hitbox to enemies group so arrows can detect it
-	var hitbox := $Hitbox as Area2D
-	if hitbox:
-		hitbox.add_to_group("enemies")
-	animated_sprite.animation_finished.connect(_on_animation_finished)
 
 
 func _on_animation_finished() -> void:
@@ -51,15 +46,11 @@ const CONTACT_DAMAGE = 10.0
 
 
 func take_damage(damage: float) -> void:
+	Debug.print(NodeTools.get_node_path(self) + " took " + str(damage) + " damage")
 	health -= damage
 	animated_sprite.play("hurt")
 	if health <= 0:
 		animated_sprite.play("death")
-
-
-func _on_hitbox_body_entered(body: Node2D) -> void:
-	if body.is_in_group("player") and body.has_method("take_damage"):
-		body.take_damage(CONTACT_DAMAGE)
 
 
 func serialize() -> Dictionary:

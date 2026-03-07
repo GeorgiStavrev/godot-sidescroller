@@ -23,6 +23,7 @@ var can_save: bool = false
 var _pending_load_data: Array = []
 var _captured_node_data: Array = []
 var _collected_coins: Array[String] = []
+var debug_mode: bool = false
 
 
 func _ready() -> void:
