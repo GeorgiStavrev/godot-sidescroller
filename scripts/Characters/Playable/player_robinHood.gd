@@ -20,7 +20,6 @@ const AIM_SPEED = 240.0  # Degrees per second
 const AIM_ANGLE_MIN = -90.0  # Up angle limit (degrees)
 const AIM_ANGLE_MAX = 90.0  # Down angle limit (degrees)
 const MAX_HEALTH = 100.0
-const MAX_CHARGE_TIME = 1.5  # Seconds to reach full charge
 
 var _facing_right: bool = true
 var _current_weapon: Node = null
@@ -108,28 +107,66 @@ func _handle_shoot() -> void:
 	if not _current_weapon.has_method("shoot"):
 		return
 
+	var weapon_supports_charging: bool = (
+		_current_weapon.has_method("supports_charging") and _current_weapon.supports_charging()
+	)
+
 	# Start charging when shoot is pressed
 	if Input.is_action_just_pressed("shoot"):
-		_is_charging = true
-		_charge_start_time = Time.get_ticks_msec() / 1000.0
-		charge_bar.visible = true
-		charge_bar.value = 0.0
-		if _current_weapon.has_method("start_charge"):
-			_current_weapon.start_charge()
+		if weapon_supports_charging:
+			_start_charging()
+		else:
+			# Instant shot for non-charging weapons
+			_shoot_weapon(1.0)
+			return
 
-	# Update charge bar while holding
-	if _is_charging:
+	# Update charge bar while holding (only for charging weapons)
+	if _is_charging and weapon_supports_charging:
 		var charge_time: float = Time.get_ticks_msec() / 1000.0 - _charge_start_time
-		var charge_ratio: float = clampf(charge_time / MAX_CHARGE_TIME, 0.0, 1.0)
-		charge_bar.value = charge_ratio
+		var charge_info: ChargeInfo = _current_weapon.get_charge_info(charge_time)
+
+		charge_bar.value = charge_info.display_ratio
+
+		# Visual warning when approaching auto-release
+		if charge_info.warning_progress > 0.0:
+			charge_bar.modulate = Color.WHITE.lerp(Color.RED, charge_info.warning_progress)
+			# Blink effect - faster as we get closer to release
+			var blink_speed := 10.0 + charge_info.warning_progress * 20.0
+			var blink := (sin(charge_time * blink_speed) + 1.0) / 2.0
+			charge_bar.modulate.a = 0.5 + blink * 0.5
+		else:
+			charge_bar.modulate = Color.WHITE
+
+		# Auto-release when weapon says so
+		if charge_info.should_release:
+			_shoot_weapon(charge_info.power)
+			# Restart charging if still holding shoot
+			if Input.is_action_pressed("shoot"):
+				_start_charging()
+			return
 
 	# Release to shoot with accumulated charge
 	if Input.is_action_just_released("shoot") and _is_charging:
 		var charge_time: float = Time.get_ticks_msec() / 1000.0 - _charge_start_time
-		var charge_ratio: float = clampf(charge_time / MAX_CHARGE_TIME, 0.0, 1.0)
-		_current_weapon.shoot(_aim_direction, velocity, charge_ratio)
-		_is_charging = false
-		charge_bar.visible = false
+		var charge_info: ChargeInfo = _current_weapon.get_charge_info(charge_time)
+		_shoot_weapon(charge_info.power)
+
+
+func _start_charging() -> void:
+	_is_charging = true
+	_charge_start_time = Time.get_ticks_msec() / 1000.0
+	charge_bar.visible = true
+	charge_bar.value = 0.0
+	charge_bar.modulate = Color.WHITE
+	if _current_weapon.has_method("start_charge"):
+		_current_weapon.start_charge()
+
+
+func _shoot_weapon(power: float) -> void:
+	_current_weapon.shoot(_aim_direction, velocity, power)
+	_is_charging = false
+	charge_bar.visible = false
+	charge_bar.modulate = Color.WHITE
 
 
 func _get_input_direction() -> float:

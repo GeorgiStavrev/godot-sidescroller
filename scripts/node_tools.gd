@@ -1,5 +1,6 @@
 extends Node
 
+
 func get_node_path(node: Node) -> String:
 	var names: Array[String] = []
 	var current_node = node

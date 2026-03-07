@@ -29,9 +29,11 @@ func _update_shape() -> void:
 		shape.size = size
 	collision_shape.position = offset
 
+
 func hit(damage: float) -> void:
 	Debug.print(NodeTools.get_node_path(self), " was hit (damage:" + str(damage) + ").")
-	self._forward_damage_to_parent(damage*damage_multiplier)
+	self._forward_damage_to_parent(damage * damage_multiplier)
+
 
 func _forward_damage_to_parent(damage: float) -> void:
 	var parent := get_parent()

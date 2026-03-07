@@ -7,6 +7,11 @@ extends Node2D
 const ARROW_SCENE = preload("res://scenes/Weapons/arrow.tscn")
 const DRAW_OFFSET = 3.0  # How far back the arrow moves when drawn (in pixels)
 
+# Charging configuration
+const MAX_CHARGE_TIME = 1.5  # Seconds to reach full charge
+const AUTO_RELEASE_TIME = 2.0  # Seconds before forced release
+const CHARGE_WARNING_RATIO = 0.8  # When to start warning (ratio of auto-release time)
+
 var _nocked_arrow_base_x: float = 0.0
 var _is_drawn: bool = false
 var _is_reloading: bool = false
@@ -24,6 +29,26 @@ func _ready() -> void:
 
 func is_ready() -> bool:
 	return not _is_reloading
+
+
+func supports_charging() -> bool:
+	return true
+
+
+func get_charge_info(charge_time: float) -> ChargeInfo:
+	var power := clampf(charge_time / MAX_CHARGE_TIME, 0.0, 1.0)
+	var display_ratio := power  # For bow, display matches power
+	var should_release := charge_time >= AUTO_RELEASE_TIME
+
+	# Calculate warning progress (0.0 = no warning, 1.0 = about to release)
+	var release_ratio := charge_time / AUTO_RELEASE_TIME
+	var warning_progress := 0.0
+	if release_ratio >= CHARGE_WARNING_RATIO:
+		warning_progress = (release_ratio - CHARGE_WARNING_RATIO) / (1.0 - CHARGE_WARNING_RATIO)
+
+	return ChargeInfo.create(
+		power, display_ratio, should_release, clampf(warning_progress, 0.0, 1.0)
+	)
 
 
 func start_charge() -> void:
