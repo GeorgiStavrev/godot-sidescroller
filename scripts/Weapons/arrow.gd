@@ -54,16 +54,6 @@ func _on_body_entered(body: Node2D) -> void:
 
 	_has_collided = true
 
-	# Skip bodies that have hitbox children - let area detection handle them
-	if _has_hitbox_child(body):
-		return
-
-	if body.is_in_group("enemies"):
-		_has_stopped = true
-		body.queue_free()
-		freeze = true
-		return
-
 	# Surfaces: check velocity before sticking
 	if linear_velocity.length() < MIN_SPEED_TO_DAMAGE:
 		return
@@ -135,10 +125,3 @@ func _stick_to_surface(body: Node2D) -> void:
 func _stop() -> void:
 	_has_stopped = true
 	freeze = true
-
-
-func _has_hitbox_child(node: Node) -> bool:
-	for child in node.get_children():
-		if child.is_in_group("hitbox"):
-			return true
-	return false

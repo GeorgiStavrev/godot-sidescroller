@@ -53,6 +53,10 @@ func take_damage(damage: float) -> void:
 		animated_sprite.play("death")
 
 
+func show_hit_label(text: String, settings: LabelSettings = null) -> void:
+	FloatingLabel.spawn(self, text, settings, Vector2(0, -10))
+
+
 func serialize() -> Dictionary:
 	return {
 		"position_x": position.x,

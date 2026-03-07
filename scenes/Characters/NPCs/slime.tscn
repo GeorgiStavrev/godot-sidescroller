@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://60srmp8f1guv"]
+[gd_scene load_steps=20 format=3 uid="uid://60srmp8f1guv"]
 
 [ext_resource type="Script" uid="uid://0k25jjpsoipc" path="res://scripts/Characters/NPC/slime.gd" id="1_n6pvg"]
 [ext_resource type="Texture2D" uid="uid://dqike8fmnyj4u" path="res://assets/sprites/slime_green.png" id="1_p2gj0"]
@@ -109,6 +109,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 13)
 
+[sub_resource type="LabelSettings" id="LabelSettings_bufos"]
+font_size = 10
+font_color = Color(0.83717674, 0.14127332, 0, 1)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_killzone"]
 size = Vector2(14, 12)
 
@@ -127,11 +131,21 @@ frame_progress = 1.0
 position = Vector2(-1, 5.5)
 shape = SubResource("RectangleShape2D_body")
 
-[node name="Hitbox_head" parent="." instance=ExtResource("5_hitbox")]
-position = Vector2(-1, 3.5)
-scale = Vector2(0.71031857, -0.6088969)
+[node name="Hitbox_front_head" parent="." instance=ExtResource("5_hitbox")]
+position = Vector2(0.9999999, 4)
+scale = Vector2(0.428164, -0.4153224)
 offset = Vector2(0, 4.5)
 damage_multiplier = 1.5
+hit_label = "headshot"
+hit_label_settings = SubResource("LabelSettings_bufos")
+
+[node name="Hitbox_back_head" parent="." instance=ExtResource("5_hitbox")]
+position = Vector2(-4, 2)
+scale = Vector2(0.2841975, 0.3982025)
+
+[node name="Hitbox_mouth" parent="." instance=ExtResource("5_hitbox")]
+position = Vector2(-1, 6.5)
+scale = Vector2(0.71390843, 0.20147757)
 
 [node name="Hitbox_feet" parent="." instance=ExtResource("5_hitbox")]
 position = Vector2(0, 10)
