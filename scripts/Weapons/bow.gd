@@ -8,15 +8,15 @@ const ARROW_SCENE = preload("res://scenes/Weapons/arrow.tscn")
 const DRAW_OFFSET = 3.0  # How far back the arrow moves when drawn (in pixels)
 
 # Charging configuration
-const MAX_CHARGE_TIME = 1.5  # Seconds to reach full charge
-const AUTO_RELEASE_TIME = 2.0  # Seconds before forced release
-const CHARGE_WARNING_RATIO = 0.8  # When to start warning (ratio of auto-release time)
+const MAX_CHARGE_TIME = 0.8  # Seconds to reach full charge
+const AUTO_RELEASE_TIME = 1.0  # Seconds before forced release
+const CHARGE_WARNING_RATIO = 0.85  # When to start warning (ratio of auto-release time)
 
 var _nocked_arrow_base_x: float = 0.0
 var _is_drawn: bool = false
 var _is_reloading: bool = false
 
-@export var reload_time: float = 0.5  # Base reload time in seconds
+@export var reload_time: float = 0.6  # Base reload time in seconds
 @export var reload_speed: float = 1.0  # Multiplier (higher = faster)
 
 

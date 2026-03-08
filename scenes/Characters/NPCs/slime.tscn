@@ -1,10 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://60srmp8f1guv"]
+[gd_scene load_steps=21 format=3 uid="uid://60srmp8f1guv"]
 
 [ext_resource type="Script" uid="uid://0k25jjpsoipc" path="res://scripts/Characters/NPC/slime.gd" id="1_n6pvg"]
 [ext_resource type="Texture2D" uid="uid://dqike8fmnyj4u" path="res://assets/sprites/slime_green.png" id="1_p2gj0"]
 [ext_resource type="PackedScene" uid="uid://btvetxn3a0nfn" path="res://scenes/killzone.tscn" id="2_n6pvg"]
 [ext_resource type="PackedScene" path="res://scenes/UI/health_bar.tscn" id="4_health"]
 [ext_resource type="PackedScene" uid="uid://lwrdl1l4058" path="res://scenes/Components/hitbox.tscn" id="5_hitbox"]
+[ext_resource type="PackedScene" uid="uid://di33tfeioprrb" path="res://scenes/Components/finisher_taunt.tscn" id="6_s6lhv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1vytc"]
 atlas = ExtResource("1_p2gj0")
@@ -135,13 +136,14 @@ shape = SubResource("RectangleShape2D_body")
 position = Vector2(0.9999999, 4)
 scale = Vector2(0.428164, -0.4153224)
 offset = Vector2(0, 4.5)
-damage_multiplier = 1.5
+damage_multiplier = 1.8
 hit_label = "headshot"
 hit_label_settings = SubResource("LabelSettings_bufos")
 
 [node name="Hitbox_back_head" parent="." instance=ExtResource("5_hitbox")]
 position = Vector2(-4, 2)
 scale = Vector2(0.2841975, 0.3982025)
+damage_multiplier = 1.3
 
 [node name="Hitbox_mouth" parent="." instance=ExtResource("5_hitbox")]
 position = Vector2(-1, 6.5)
@@ -168,5 +170,7 @@ target_position = Vector2(-10, 0)
 [node name="HealthBar" parent="." instance=ExtResource("4_health")]
 offset_top = -9.0
 offset_bottom = -4.0
+
+[node name="FinisherTaunt" parent="." instance=ExtResource("6_s6lhv")]
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animation_finished"]

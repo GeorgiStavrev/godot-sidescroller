@@ -1,26 +1,21 @@
-extends CharacterBody2D
+extends NPCNode
 
 const SPEED = 30.0
 const MAX_HEALTH = 20.0
 const GRAVITY = 400.0
+const CONTACT_DAMAGE = 10.0
 
-var direction = 1
-var health: float = MAX_HEALTH
 @onready var ray_cast_right: RayCast2D = $RayCastRight
 @onready var ray_cast_left: RayCast2D = $RayCastLeft
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 
 func _ready() -> void:
 	add_to_group("saveable")
 	add_to_group("enemies")
-
-
-func _on_animation_finished() -> void:
-	if animated_sprite.animation == "hurt":
-		animated_sprite.play("default")
-	if animated_sprite.animation == "death":
-		queue_free()
+	self.max_health = MAX_HEALTH
+	self.health = self.max_health
+	self.animations = get_node("AnimatedSprite2D")
+	self.direction = 1
 
 
 func _physics_process(delta: float) -> void:
@@ -33,40 +28,10 @@ func _physics_process(delta: float) -> void:
 	# Horizontal movement and direction change
 	if ray_cast_right.is_colliding():
 		direction = -1
-		animated_sprite.flip_h = true
+		animations.flip_h = true
 	elif ray_cast_left.is_colliding():
 		direction = 1
-		animated_sprite.flip_h = false
+		animations.flip_h = false
 
 	velocity.x = direction * SPEED
 	move_and_slide()
-
-
-const CONTACT_DAMAGE = 10.0
-
-
-func take_damage(damage: float) -> void:
-	Debug.print(NodeTools.get_node_path(self) + " took " + str(damage) + " damage")
-	health -= damage
-	animated_sprite.play("hurt")
-	if health <= 0:
-		animated_sprite.play("death")
-
-
-func show_hit_label(text: String, settings: LabelSettings = null) -> void:
-	FloatingLabel.spawn(self, text, settings, Vector2(0, -10))
-
-
-func serialize() -> Dictionary:
-	return {
-		"position_x": position.x,
-		"position_y": position.y,
-		"direction": direction,
-	}
-
-
-func deserialize(data: Dictionary) -> void:
-	position.x = data.get("position_x", position.x)
-	position.y = data.get("position_y", position.y)
-	direction = data.get("direction", direction)
-	animated_sprite.flip_h = direction == -1
